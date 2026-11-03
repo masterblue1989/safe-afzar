@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سیف افزار (safe afzar)</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3B7E5F">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    * {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .font-num {
+      font-family: 'JetBrains Mono', monospace !important;
+      direction: ltr !important;
+      unicode-bidi: isolate;
+      letter-spacing: 0.08em;
+    }
+    .pastel-shadow {
+      box-shadow: 0 4px 18px -2px rgba(59, 126, 95, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+    .copy-success {
+      background-color: #C3EED4 !important;
+      color: #0E5031 !important;
+      border-color: #87DCAB !important;
+    }
+  </style>
+</head>
+<body class="bg-[#F3F8F5] text-[#153627] min-h-screen p-3 md:p-6 antialiased">
+  <div class="max-w-md mx-auto bg-white rounded-3xl border border-[#D1EBDC] overflow-hidden pastel-shadow">
+    <header class="bg-gradient-to-b from-[#D8F2E3] to-[#EBF7F0] p-5 border-b border-[#D1EBDC] rounded-b-3xl">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-white shadow-sm flex items-center justify-center border border-[#C2E7D2]">
+            <svg class="w-5 h-5 text-[#3B7E5F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-lg font-bold text-[#153627] leading-tight">سیف افزار (safe afzar)</h1>
+            <p class="text-xs text-[#4A6E5C] mt-0.5">نگهداری امن اطلاعات شخصی (ارقام انگلیسی)</p>
+          </div>
+        </div>
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-white text-[#3B7E5F] border border-[#C2E7D2] shadow-xs">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse"></span>
+          امن و آفلاین
+        </span>
+      </div>
+
+      <div class="relative">
+        <input 
+          id="searchInput" 
+          type="text" 
+          placeholder="جستجو در ۳ کد پستی، کارت‌ها، کد ملی…" 
+          class="w-full pl-4 pr-10 py-2.5 bg-white text-sm rounded-2xl border border-[#CDE7D9] focus:outline-none focus:ring-2 focus:ring-[#5CA684] focus:border-transparent placeholder-[#6B8E7D] shadow-xs transition"
+          oninput="filterItems()"
+        />
+        <svg class="w-4 h-4 text-[#5CA684] absolute right-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+      </div>
+
+      <div class="flex gap-1.5 mt-3.5 overflow-x-auto pb-1 text-xs">
+        <button onclick="setCategory('ALL')" id="tab-ALL" class="cat-pill active px-3 py-1.5 rounded-xl font-medium bg-[#3B7E5F] text-white transition">همه موارد</button>
+        <button onclick="setCategory('POSTAL')" id="tab-POSTAL" class="cat-pill px-3 py-1.5 rounded-xl font-medium bg-white text-[#3B7E5F] border border-[#CDE7D9] transition">۳ کد پستی</button>
+        <button onclick="setCategory('BANK')" id="tab-BANK" class="cat-pill px-3 py-1.5 rounded-xl font-medium bg-white text-[#3B7E5F] border border-[#CDE7D9] transition">کارت‌های بانکی</button>
+        <button onclick="setCategory('ID')" id="tab-ID" class="cat-pill px-3 py-1.5 rounded-xl font-medium bg-white text-[#3B7E5F] border border-[#CDE7D9] transition">مدارک هویتی</button>
+      </div>
+    </header>
+
+    <div class="mx-4 mt-3 p-2.5 bg-[#EEF9F2] border border-[#CDEBD8] rounded-2xl flex items-center gap-2 text-xs text-[#24533C]">
+      <svg class="w-4 h-4 text-[#3B7E5F] shrink-0" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+      </svg>
+      <span>تمامی اعداد با <b>ارقام انگلیسی</b> ذخیره می‌شوند و با دکمه <b>کپی سریع</b> فوراً آماده پیست هستند.</span>
+    </div>
+
+    <main id="itemsContainer" class="p-4 space-y-3.5 pb-24"></main>
+
+    <div class="sticky bottom-4 left-0 right-0 flex justify-center pointer-events-none px-4">
+      <button 
+        onclick="openModal()" 
+        class="pointer-events-auto flex items-center gap-2 bg-[#3B7E5F] text-white px-5 py-3 rounded-full font-bold shadow-lg hover:bg-[#2F6B50] active:scale-95 transition"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4" />
+        </svg>
+        <span>افزودن اطلاعات جدید</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-xs hidden items-center justify-center p-4 z-50">
+    <div class="bg-white max-w-sm w-full rounded-3xl p-5 border border-[#CDE7D9] shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-[#EAF4EE]">
+        <h3 class="font-bold text-[#153627]">افزودن اطلاعات به گاوصندوق</h3>
+        <button onclick="closeModal()" class="w-7 h-7 rounded-full bg-[#F3F8F5] text-[#4A6E5C] flex items-center justify-center hover:bg-[#E2EFE7]">✕</button>
+      </div>
+
+      <div class="mt-4 space-y-3 text-xs">
+        <div>
+          <label class="block font-medium text-[#24533C] mb-1">نوع مدرک:</label>
+          <select id="modalType" onchange="onTypeChange()" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] bg-white text-sm focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+            <option value="POSTAL">کدهای پستی سه‌گانه (منزل، محل کار، سایر)</option>
+            <option value="BANK">کارت بانکی و شماره شبا</option>
+            <option value="NATIONAL">کارت ملی هوشمند و سریال پشت کارت</option>
+            <option value="BIRTH">شناسنامه و سری</option>
+            <option value="CUSTOM">سایر اطلاعات دلخواه</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-medium text-[#24533C] mb-1">عنوان (مثلاً: کدهای پستی یا کارت ملت):</label>
+          <input id="modalTitle" type="text" placeholder="عنوان مدرک…" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+        </div>
+
+        <div id="dynamicFields" class="space-y-3"></div>
+
+        <div>
+          <label class="block font-medium text-[#24533C] mb-1">یادداشت دلخواه:</label>
+          <textarea id="modalNotes" rows="2" placeholder="توضیحات تکمیلی اختیاری…" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-xs focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]"></textarea>
+        </div>
+
+        <div class="p-2 bg-[#F3F9F5] rounded-xl border border-[#D5EADF] text-[11px] text-[#3B7E5F]">
+          ✓ تمامی کیبوردهای فارسی و عربی به طور خودکار به <b>ارقام انگلیسی</b> تبدیل می‌شوند.
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="closeModal()" class="flex-1 py-2.5 rounded-xl border border-[#CDE7D9] text-[#4A6E5C] font-semibold hover:bg-[#F3F8F5]">انصراف</button>
+          <button onclick="saveItem()" class="flex-1 py-2.5 rounded-xl bg-[#3B7E5F] text-white font-bold hover:bg-[#2F6B50]">ذخیره در گاوصندوق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-6 right-1/2 translate-x-1/2 bg-[#153627] text-white text-xs px-4 py-2.5 rounded-2xl shadow-xl flex items-center gap-2 opacity-0 pointer-events-none transition-all duration-300 z-50">
+    <svg class="w-4 h-4 text-[#4ADE80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+    </svg>
+    <span id="toastMsg">با موفقیت کپی شد!</span>
+  </div>
+
+  <script>
+    function toEnglishDigits(str) {
+      if (!str) return '';
+      const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      const arabicDigits  = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+      let result = str.toString();
+      for (let i = 0; i < 10; i++) {
+        result = result.replaceAll(persianDigits[i], i.toString());
+        result = result.replaceAll(arabicDigits[i], i.toString());
+      }
+      return result;
+    }
+
+    function formatPostal(code) {
+      const clean = toEnglishDigits(code).replace(/\D/g, '');
+      if (clean.length === 10) {
+        return clean.substring(0, 5) + ' - ' + clean.substring(5);
+      }
+      return clean;
+    }
+
+    function formatCard(card) {
+      const clean = toEnglishDigits(card).replace(/\D/g, '');
+      return clean.match(/.{1,4}/g)?.join('  -  ') || clean;
+    }
+
+    function detectBank(card) {
+      const clean = toEnglishDigits(card).replace(/\D/g, '');
+      if (clean.length < 6) return 'کارت شتابی';
+      const bin = clean.substring(0, 6);
+      const banks = {
+        '603799': 'بانک ملی ایران',
+        '610433': 'بانک ملت',
+        '589210': 'بانک سپه',
+        '621986': 'بلو بانک / سامان',
+        '585983': 'بانک تجارت',
+        '603770': 'بانک کشاورزی',
+        '502229': 'بانک پاسارگاد',
+        '622106': 'بانک پارسیان',
+        '504172': 'بانک رسالت',
+        '628023': 'بانک مسکن'
+      };
+      return banks[bin] || 'کارت شتابی';
+    }
+
+    let items = [
+      {
+        id: 1,
+        type: 'POSTAL',
+        title: 'کدهای پستی سه‌گانه من',
+        notes: 'کد پستی منزل، شرکت و ویلای شمال',
+        postal1: '1458932145',
+        postal2: '1939547891',
+        postal3: '4671895231'
+      },
+      {
+        id: 2,
+        type: 'NATIONAL',
+        title: 'کارت ملی هوشمند',
+        notes: 'کد ملی و سریال پشت کارت جهت احراز هویت',
+        nationalCode: '0012345678',
+        backSerial: '2D9847125'
+      },
+      {
+        id: 3,
+        type: 'BANK',
+        title: 'کارت بانک ملت (حقوق)',
+        notes: 'واریز حقوق و خریدهای آنلاین',
+        cardNumber: '6104337890123456',
+        cvv2: '782',
+        expireDate: '07/28',
+        shaba: 'IR120120000000001234567890'
+      },
+      {
+        id: 4,
+        type: 'BIRTH',
+        title: 'شناسنامه فردی',
+        notes: 'صادره از حوزه پنج ثبت احوال تهران',
+        serialNumber: '123456',
+        serialLetter: 'الف/۳۸'
+      }
+    ];
+
+    let currentCategory = 'ALL';
+
+    function setCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.classList.remove('bg-[#3B7E5F]', 'text-white');
+        btn.classList.add('bg-white', 'text-[#3B7E5F]');
+      });
+      const activeBtn = document.getElementById(`tab-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-white', 'text-[#3B7E5F]');
+        activeBtn.classList.add('bg-[#3B7E5F]', 'text-white');
+      }
+      render();
+    }
+
+    function filterItems() {
+      render();
+    }
+
+    function copyText(raw, label, btnElem) {
+      navigator.clipboard.writeText(raw).then(() => {
+        const originalText = btnElem.innerHTML;
+        btnElem.innerHTML = `
+          <svg class="w-3.5 h-3.5 text-[#0E5031]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+          <span class="text-[11px] font-bold text-[#0E5031]">کپی شد!</span>
+        `;
+        btnElem.classList.add('copy-success');
+        showToast(`${label} کپی شد!`);
+
+        setTimeout(() => {
+          btnElem.innerHTML = originalText;
+          btnElem.classList.remove('copy-success');
+        }, 1800);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      toast.classList.add('opacity-100');
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none');
+        toast.classList.remove('opacity-100');
+      }, 2000);
+    }
+
+    function renderCopyField(label, rawValue, displayedValue = rawValue) {
+      return `
+        <div class="bg-[#F7FBF9] border border-[#E2F2E9] rounded-2xl p-2.5">
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs text-[#4A6E5C] font-medium">${label}</span>
+            <button 
+              onclick="copyText('${rawValue}', '${label}', this)" 
+              class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#E4F5EB] text-[#25664C] border border-[#C2E7D2] hover:bg-[#D2EEDD] transition text-xs font-semibold"
+            >
+              <svg class="w-3 h-3 text-[#25664C]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+              </svg>
+              <span>کپی سریع</span>
+            </button>
+          </div>
+          <div class="font-num text-[#153627] font-bold text-sm tracking-wider text-left py-0.5">
+            ${displayedValue}
+          </div>
+        </div>
+      `;
+    }
+
+    function deleteItem(id) {
+      if (confirm('آیا از حذف این مورد اطمینان دارید؟')) {
+        items = items.filter(it => it.id !== id);
+        render();
+        showToast('مورد با موفقیت حذف شد.');
+      }
+    }
+
+    function render() {
+      const container = document.getElementById('itemsContainer');
+      const query = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      let filtered = items.filter(item => {
+        const matchesCat = currentCategory === 'ALL' || item.type === currentCategory;
+        const matchesQuery = !query || 
+          item.title.toLowerCase().includes(query) ||
+          (item.notes && item.notes.toLowerCase().includes(query)) ||
+          (item.postal1 && item.postal1.includes(query)) ||
+          (item.postal2 && item.postal2.includes(query)) ||
+          (item.postal3 && item.postal3.includes(query)) ||
+          (item.cardNumber && item.cardNumber.includes(query)) ||
+          (item.nationalCode && item.nationalCode.includes(query));
+        return matchesCat && matchesQuery;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 px-4 bg-[#F9FDFB] rounded-3xl border border-dashed border-[#CDE7D9]">
+            <p class="font-bold text-sm text-[#153627]">موردی یافت نشد!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => {
+        let contentHtml = '';
+
+        if (item.type === 'POSTAL') {
+          contentHtml = `
+            <div class="space-y-2">
+              ${renderCopyField('کد پستی اول (منزل)', item.postal1, formatPostal(item.postal1))}
+              ${renderCopyField('کد پستی دوم (محل کار)', item.postal2, formatPostal(item.postal2))}
+              ${renderCopyField('کد پستی سوم (سایر / دلخواه)', item.postal3, formatPostal(item.postal3))}
+            </div>
+          `;
+        } else if (item.type === 'BANK') {
+          const bank = detectBank(item.cardNumber);
+          contentHtml = `
+            <div class="space-y-2">
+              ${renderCopyField(`شماره ۱۶ رقمی کارت (${bank})`, item.cardNumber, formatCard(item.cardNumber))}
+              <div class="grid grid-cols-2 gap-2">
+                ${renderCopyField('کد اعتبارسنجی (CVV2)', item.cvv2)}
+                ${renderCopyField('تاریخ انقضا', item.expireDate)}
+              </div>
+              ${item.shaba ? renderCopyField('شماره شبا (با IR)', item.shaba) : ''}
+            </div>
+          `;
+        } else if (item.type === 'NATIONAL') {
+          contentHtml = `
+            <div class="space-y-2">
+              ${renderCopyField('کد ملی ۱۰ رقمی', item.nationalCode)}
+              ${item.backSerial ? renderCopyField('سریال پشت کارت هوشمند ملی', item.backSerial) : ''}
+            </div>
+          `;
+        } else if (item.type === 'BIRTH') {
+          contentHtml = `
+            <div class="space-y-2">
+              ${renderCopyField('شماره شناسنامه', item.serialNumber)}
+              ${item.serialLetter ? renderCopyField('سری و حرف شناسنامه', item.serialLetter) : ''}
+            </div>
+          `;
+        } else {
+          contentHtml = `
+            <div class="space-y-2">
+              ${renderCopyField('شناسه / شماره', item.customValue || '')}
+            </div>
+          `;
+        }
+
+        const typeLabels = {
+          'POSTAL': 'کدهای پستی سه‌گانه',
+          'BANK': 'کارت بانکی',
+          'NATIONAL': 'کارت ملی',
+          'BIRTH': 'شناسنامه',
+          'CUSTOM': 'سایر اسناد'
+        };
+
+        return `
+          <div class="bg-white rounded-3xl p-4 border border-[#D1EBDC] shadow-xs hover:border-[#8FD5A6] transition">
+            <div class="flex items-center justify-between mb-3 pb-2 border-b border-[#F0F7F3]">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-[#5CA684]"></span>
+                <div>
+                  <h2 class="font-bold text-sm text-[#153627]">${item.title}</h2>
+                  <span class="text-[11px] text-[#3B7E5F] font-medium">${typeLabels[item.type] || 'سند'}</span>
+                </div>
+              </div>
+              <button onclick="deleteItem(${item.id})" class="text-xs text-[#DC2626] hover:bg-red-50 p-1.5 rounded-xl transition" title="حذف">
+                🗑️
+              </button>
+            </div>
+            ${contentHtml}
+            ${item.notes ? `
+              <div class="mt-2.5 px-3 py-1.5 bg-[#FAFDFB] rounded-xl text-xs text-[#52796F] border border-[#E9F4EE]">
+                یادداشت: ${item.notes}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModal() {
+      document.getElementById('addModal').classList.remove('hidden');
+      document.getElementById('addModal').classList.add('flex');
+      onTypeChange();
+    }
+
+    function closeModal() {
+      document.getElementById('addModal').classList.add('hidden');
+      document.getElementById('addModal').classList.remove('flex');
+    }
+
+    function onTypeChange() {
+      const type = document.getElementById('modalType').value;
+      const titleInput = document.getElementById('modalTitle');
+      const container = document.getElementById('dynamicFields');
+
+      if (type === 'POSTAL') {
+        titleInput.value = 'کدهای پستی من (۳ آدرس)';
+        container.innerHTML = `
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">کد پستی اول - منزل (۱۰ رقم):</label>
+            <input id="inputPostal1" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="مثال: 1458932145" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">کد پستی دوم - محل کار (۱۰ رقم):</label>
+            <input id="inputPostal2" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="مثال: 1939547891" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">کد پستی سوم - سایر / دلخواه (۱۰ رقم):</label>
+            <input id="inputPostal3" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="مثال: 4671895231" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+        `;
+      } else if (type === 'BANK') {
+        titleInput.value = 'کارت بانکی';
+        container.innerHTML = `
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">شماره ۱۶ رقمی کارت بانکی:</label>
+            <input id="inputCard" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="603799..." class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-medium text-[#24533C] mb-1">کد CVV2:</label>
+              <input id="inputCvv2" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="782" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+            </div>
+            <div>
+              <label class="block font-medium text-[#24533C] mb-1">انقضا (ماه/سال):</label>
+              <input id="inputExp" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="08/29" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">شماره شبا (با IR):</label>
+            <input id="inputShaba" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="IR..." class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+        `;
+      } else if (type === 'NATIONAL') {
+        titleInput.value = 'کارت ملی هوشمند';
+        container.innerHTML = `
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">کد ملی (۱۰ رقم):</label>
+            <input id="inputNational" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="0012345678" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">سریال پشت کارت هوشمند ملی:</label>
+            <input id="inputBackSerial" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="2D9847125" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+        `;
+      } else if (type === 'BIRTH') {
+        titleInput.value = 'شناسنامه فردی';
+        container.innerHTML = `
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">شماره عددی شناسنامه:</label>
+            <input id="inputBirthNum" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="123456" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">سری و حرف شناسنامه:</label>
+            <input id="inputBirthLetter" type="text" placeholder="مثال: الف/۳۸" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+        `;
+      } else {
+        titleInput.value = 'اطلاعات دلخواه';
+        container.innerHTML = `
+          <div>
+            <label class="block font-medium text-[#24533C] mb-1">مقدار شناسه یا شماره:</label>
+            <input id="inputCustom" oninput="this.value = toEnglishDigits(this.value)" type="text" placeholder="مقدار عددی یا متنی…" class="w-full p-2.5 rounded-xl border border-[#CDE7D9] text-sm font-num text-left focus:outline-none focus:ring-1 focus:ring-[#3B7E5F]">
+          </div>
+        `;
+      }
+    }
+
+    function saveItem() {
+      const type = document.getElementById('modalType').value;
+      const title = document.getElementById('modalTitle').value.trim() || 'اطلاعات شخصی';
+      const notes = document.getElementById('modalNotes').value.trim();
+
+      const newItem = {
+        id: Date.now(),
+        type,
+        title,
+        notes
+      };
+
+      if (type === 'POSTAL') {
+        newItem.postal1 = toEnglishDigits(document.getElementById('inputPostal1')?.value || '');
+        newItem.postal2 = toEnglishDigits(document.getElementById('inputPostal2')?.value || '');
+        newItem.postal3 = toEnglishDigits(document.getElementById('inputPostal3')?.value || '');
+        if (!newItem.postal1 && !newItem.postal2 && !newItem.postal3) {
+          alert('لطفاً حداقل یکی از کدهای پستی را وارد نمایید.');
+          return;
+        }
+      } else if (type === 'BANK') {
+        newItem.cardNumber = toEnglishDigits(document.getElementById('inputCard')?.value || '');
+        newItem.cvv2 = toEnglishDigits(document.getElementById('inputCvv2')?.value || '');
+        newItem.expireDate = toEnglishDigits(document.getElementById('inputExp')?.value || '');
+        newItem.shaba = toEnglishDigits(document.getElementById('inputShaba')?.value || '');
+        if (!newItem.cardNumber) {
+          alert('لطفاً شماره کارت را وارد نمایید.');
+          return;
+        }
+      } else if (type === 'NATIONAL') {
+        newItem.nationalCode = toEnglishDigits(document.getElementById('inputNational')?.value || '');
+        newItem.backSerial = toEnglishDigits(document.getElementById('inputBackSerial')?.value || '');
+        if (!newItem.nationalCode) {
+          alert('لطفاً کد ملی را وارد نمایید.');
+          return;
+        }
+      } else if (type === 'BIRTH') {
+        newItem.serialNumber = toEnglishDigits(document.getElementById('inputBirthNum')?.value || '');
+        newItem.serialLetter = document.getElementById('inputBirthLetter')?.value || '';
+        if (!newItem.serialNumber) {
+          alert('لطفاً شماره شناسنامه را وارد نمایید.');
+          return;
+        }
+      } else {
+        newItem.customValue = toEnglishDigits(document.getElementById('inputCustom')?.value || '');
+      }
+
+      items.unshift(newItem);
+      closeModal();
+      render();
+      showToast('اطلاعات با موفقیت ذخیره شد!');
+    }
+
+    render();
+  </script>
+</body>
+</html>
