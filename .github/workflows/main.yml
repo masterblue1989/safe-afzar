@@ -1,0 +1,37 @@
+name: ساخت خودکار فایل APK سیف افزار
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch: # امکان اجرا با ۱ کلیک دستی در گیت‌هاب
+
+jobs:
+  build:
+    name: Build Safe Afzar APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: دریافت کدهای پروژه
+        uses: actions/checkout@v4
+
+      - name: تنظیم نسخه جاوا ۱۷
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: اعطای مجوز اجرای گریدل
+        run: chmod +x gradlew
+
+      - name: بیلد فایل APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: ذخیره و انتشار فایل خروجی APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: safe-afzar-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
