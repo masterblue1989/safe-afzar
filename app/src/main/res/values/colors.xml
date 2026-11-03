@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pastel Mint Greens -->
+    <color name="pastel_green_50">#F0FDF4</color>
+    <color name="pastel_green_100">#DCFCE7</color>
+    <color name="pastel_green_200">#BBF7D0</color>
+    <color name="pastel_green_300">#86EFAC</color>
+    <color name="pastel_green_400">#4ADE80</color>
+    <color name="pastel_green_500">#22C55E</color>
+    <color name="pastel_green_600">#16A34A</color>
+    <color name="pastel_green_700">#15803D</color>
+    <color name="pastel_green_800">#166534</color>
+    <color name="pastel_green_900">#14532D</color>
+
+    <!-- Mint Soft Pastel Accents -->
+    <color name="mint_soft_bg">#F4F9F5</color>
+    <color name="mint_card_bg">#FFFFFF</color>
+    <color name="mint_border">#C8E6C9</color>
+    <color name="mint_accent">#74B49B</color>
+    <color name="mint_primary">#5B9279</color>
+    <color name="mint_dark_text">#1B382B</color>
+    <color name="mint_subtext">#52796F</color>
+    <color name="mint_chip_bg">#E8F5E9</color>
+</resources>

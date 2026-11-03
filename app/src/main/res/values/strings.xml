@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">سیف افزار (safe afzar)</string>
+    <string name="app_tagline">نگهداری امن اطلاعات هویتی و بانکی شخصی</string>
+
+    <!-- دکمه‌ها و عملیات -->
+    <string name="copy">کپی</string>
+    <string name="copy_quick">کپی سریع</string>
+    <string name="copied">با موفقیت کپی شد!</string>
+    <string name="add_item">افزودن مورد جدید</string>
+    <string name="edit_item">ویرایش اطلاعات</string>
+    <string name="delete_item">حذف مورد</string>
+    <string name="save">ذخیره در گاوصندوق</string>
+    <string name="cancel">انصراف</string>
+    <string name="search_hint">جستجو در عناوین، شماره‌ها و یادداشت‌ها…</string>
+    <string name="offline_secure">کاملاً امن و آفلاین</string>
+
+    <!-- دسته‌بندی‌ها -->
+    <string name="cat_all">همه موارد</string>
+    <string name="cat_cards">کارت‌های بانکی</string>
+    <string name="cat_national">مدارک هویتی و کدهای پستی</string>
+    <string name="cat_other">سایر موارد</string>
+
+    <!-- عنوان فیلدهای اطلاعاتی -->
+    <string name="field_title">عنوان (مثلاً: اطلاعات شناسنامه‌ای یا کارت سپه)</string>
+    <string name="field_national_code">کد ملی (۱۰ رقم)</string>
+    <string name="field_postal_code_1">کد پستی اول (منزل)</string>
+    <string name="field_postal_code_2">کد پستی دوم (محل کار)</string>
+    <string name="field_postal_code_3">کد پستی سوم (سایر یا دلخواه)</string>
+    <string name="field_card_number">شماره ۱۶ رقمی کارت بانکی</string>
+    <string name="field_cvv2">کد اعتبارسنجی کارت (CVV2)</string>
+    <string name="field_expire_date">تاریخ انقضای کارت (ماه / سال)</string>
+    <string name="field_shaba">شماره شبا (با پیشوند IR)</string>
+    <string name="field_birth_cert_serial">شماره شناسنامه (عددی)</string>
+    <string name="field_birth_cert_letter">سری و حرف شناسنامه</string>
+    <string name="field_national_card_serial">سریال پشت کارت هوشمند ملی</string>
+    <string name="field_notes">یادداشت دلخواه و توضیحات تکمیلی</string>
+</resources>
